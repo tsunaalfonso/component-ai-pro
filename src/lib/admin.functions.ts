@@ -28,6 +28,7 @@ export const ensureAdminAccount = createServerFn({ method: "POST" }).handler(asy
 export const adminListUsers = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase as never, context.userId);
     const { data: profiles, error } = await context.supabase
       .from("profiles")
@@ -54,6 +55,7 @@ export const adminUpdateUser = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase as never, context.userId);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
@@ -89,6 +91,7 @@ export const adminDeleteUser = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) => z.object({ userId: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase as never, context.userId);
     if (data.userId === context.userId) throw new Error("You cannot delete your own account.");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -107,6 +110,7 @@ export const adminResetPassword = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) => z.object({ email: z.string().email(), redirectTo: z.string().url() }).parse(d))
   .handler(async ({ data, context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase as never, context.userId);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin.auth.resetPasswordForEmail(data.email, {
@@ -119,6 +123,7 @@ export const adminResetPassword = createServerFn({ method: "POST" })
 export const adminListLogs = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const { assertAdmin } = await import("./admin.server");
     await assertAdmin(context.supabase as never, context.userId);
     const { data, error } = await context.supabase
       .from("system_logs")
