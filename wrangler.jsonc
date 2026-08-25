@@ -1,0 +1,28 @@
+{
+  // TanStack Start (SSR) on Cloudflare Workers.
+  //
+  // `vite build` (nitro `cloudflare-module` preset) emits:
+  //   dist/server/index.mjs  -> the Worker (SSR + server functions)
+  //   dist/client            -> static assets, served via the ASSETS binding
+  //
+  // NOTE: `main` must point at the built Worker. It is NOT
+  // "@tanstack/react-start/server-entry" for this project — that entry is only
+  // used by the Cloudflare Vite-plugin template, which this project does not use.
+  //
+  // Build first, then deploy:
+  //   bun run build && wrangler deploy
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "component-ai-pro",
+  "compatibility_date": "2026-08-20",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "dist/server/index.mjs",
+  "no_bundle": true,
+  "rules": [{ "type": "ESModule", "globs": ["**/*.mjs", "**/*.js"] }],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "dist/client"
+  },
+  "observability": {
+    "enabled": true
+  }
+}
