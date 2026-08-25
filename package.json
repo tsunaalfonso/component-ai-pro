@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "deploy": "npm run build && npx nitro deploy --prebuilt",
-    "cf-preview": "vite build && wrangler dev"
+    "cf-preview": "npm run build && npx nitro preview --prebuilt"
   },
   "overrides": {
     "rolldown": "1.2.1"
