@@ -13,7 +13,7 @@ through the Workers Static Assets binding and runs SSR + server functions in the
 | --- | --- |
 | Build command | `npm run build` (`vite build`) |
 | Worker entry | `dist/server/index.mjs` |
-| Generated wrangler config | `dist/server/wrangler.json` |
+| Root config | `wrangler.jsonc` (merged into `dist/server/wrangler.json` at build) |
 | Static assets | `dist/client` (bound as `ASSETS`) |
 
 ## Environment variables
@@ -56,24 +56,24 @@ Missing required values produce an explicit error log naming them.
 ```bash
 npm install
 npm run build
-npx wrangler deploy --config dist/server/wrangler.json
+npx wrangler deploy
 ```
 
 Set secrets once:
 
 ```bash
-npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY --config dist/server/wrangler.json
-npx wrangler secret put LOVABLE_API_KEY --config dist/server/wrangler.json
+npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+npx wrangler secret put LOVABLE_API_KEY
 ```
 
-Local production-like run: `npx wrangler dev --config dist/server/wrangler.json`.
+Local production-like run: `npx wrangler dev`.
 
 ## Deploy — option B: Cloudflare dashboard (Git integration)
 
 Workers & Pages → Create → Workers → Import a repository, then:
 
 - Build command: `npm run build`
-- Deploy command: `npx wrangler deploy --config dist/server/wrangler.json`
+- Deploy command: `npx wrangler deploy`
 - Root directory: `/`
 
 Add the variables and secrets listed above before the first deploy.
