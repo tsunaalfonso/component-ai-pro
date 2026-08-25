@@ -7,6 +7,16 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  // Cloudflare Workers deployment target (nitro `cloudflare-module` preset).
+  // Build output: dist/client (static assets) + dist/server (worker, wrangler.json).
+  nitro: {
+    preset: "cloudflare-module",
+    cloudflare: {
+      wrangler: {
+        name: "ic-smart-multi-tester",
+      },
+    },
+  },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
