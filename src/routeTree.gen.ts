@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedCameraRouteImport } from './routes/_authenticated/camera'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticated/history'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
 import { Route as AuthenticatedUploadRouteImport } from './routes/_authenticated/upload'
 import { Route as AuthenticatedDiagnosisIndexRouteImport } from './routes/_authenticated/diagnosis.index'
@@ -49,6 +50,11 @@ const AuthenticatedHistoryRoute = AuthenticatedHistoryRouteImport.update({
   path: '/history',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedReportsRoute = AuthenticatedReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
@@ -78,6 +84,7 @@ export interface FileRoutesByFullPath {
   '/camera': typeof AuthenticatedCameraRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/history': typeof AuthenticatedHistoryRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/reports': typeof AuthenticatedReportsRoute
   '/upload': typeof AuthenticatedUploadRoute
   '/diagnosis/$id': typeof AuthenticatedDiagnosisIdRoute
@@ -89,6 +96,7 @@ export interface FileRoutesByTo {
   '/camera': typeof AuthenticatedCameraRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/history': typeof AuthenticatedHistoryRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/reports': typeof AuthenticatedReportsRoute
   '/upload': typeof AuthenticatedUploadRoute
   '/diagnosis/$id': typeof AuthenticatedDiagnosisIdRoute
@@ -102,6 +110,7 @@ export interface FileRoutesById {
   '/_authenticated/camera': typeof AuthenticatedCameraRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/history': typeof AuthenticatedHistoryRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/upload': typeof AuthenticatedUploadRoute
   '/_authenticated/diagnosis/$id': typeof AuthenticatedDiagnosisIdRoute
@@ -115,6 +124,7 @@ export interface FileRouteTypes {
     | '/camera'
     | '/dashboard'
     | '/history'
+    | '/profile'
     | '/reports'
     | '/upload'
     | '/diagnosis/$id'
@@ -126,6 +136,7 @@ export interface FileRouteTypes {
     | '/camera'
     | '/dashboard'
     | '/history'
+    | '/profile'
     | '/reports'
     | '/upload'
     | '/diagnosis/$id'
@@ -138,6 +149,7 @@ export interface FileRouteTypes {
     | '/_authenticated/camera'
     | '/_authenticated/dashboard'
     | '/_authenticated/history'
+    | '/_authenticated/profile'
     | '/_authenticated/reports'
     | '/_authenticated/upload'
     | '/_authenticated/diagnosis/$id'
@@ -194,6 +206,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedHistoryRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/reports': {
       id: '/_authenticated/reports'
       path: '/reports'
@@ -229,6 +248,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCameraRoute: typeof AuthenticatedCameraRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedHistoryRoute: typeof AuthenticatedHistoryRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
   AuthenticatedUploadRoute: typeof AuthenticatedUploadRoute
   AuthenticatedDiagnosisIdRoute: typeof AuthenticatedDiagnosisIdRoute
@@ -239,6 +259,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCameraRoute: AuthenticatedCameraRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedHistoryRoute: AuthenticatedHistoryRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
   AuthenticatedUploadRoute: AuthenticatedUploadRoute,
   AuthenticatedDiagnosisIdRoute: AuthenticatedDiagnosisIdRoute,
