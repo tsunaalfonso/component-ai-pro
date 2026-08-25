@@ -79,7 +79,7 @@ function AuthPage() {
       toast.error(error.message);
       return;
     }
-    toast.success("Account created. Verify your email, then wait for administrator approval.");
+    toast.success("Account created. No email code needed — an administrator will approve your access.");
   };
 
   const forgot = async (e: React.FormEvent<HTMLFormElement>) => {
