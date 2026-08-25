@@ -6,17 +6,15 @@
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-export default defineConfig({
-  // Cloudflare Workers deployment target (nitro `cloudflare-module` preset).
-  // Build output: dist/client (static assets) + dist/server (worker, wrangler.json).
-  nitro: {
-    preset: "cloudflare-module",
-    cloudflare: {
-      // Worker name written into dist/server/wrangler.json
-      wrangler: { name: "ic-smart-multi-tester" },
-    } as { wrangler: { name: string } },
+// Cloudflare Workers deployment target (nitro `cloudflare-module` preset).
+// Build output: dist/client (static assets) + dist/server (worker + wrangler.json).
+const nitro = {
+  preset: "cloudflare-module",
+  cloudflare: { wrangler: { name: "ic-smart-multi-tester" } },
+} as unknown as Parameters<typeof defineConfig>[0]["nitro"];
 
-  },
+export default defineConfig({
+  nitro,
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
