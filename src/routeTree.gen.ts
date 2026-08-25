@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedUploadRouteImport } from './routes/_authenticated/upload'
 import { Route as AuthenticatedDiagnosisIndexRouteImport } from './routes/_authenticated/diagnosis.index'
+import { Route as AuthenticatedDiagnosisIdRouteImport } from './routes/_authenticated/diagnosis.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,12 +47,19 @@ const AuthenticatedDiagnosisIndexRoute =
     path: '/diagnosis/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDiagnosisIdRoute =
+  AuthenticatedDiagnosisIdRouteImport.update({
+    id: '/diagnosis/$id',
+    path: '/diagnosis/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/upload': typeof AuthenticatedUploadRoute
+  '/diagnosis/$id': typeof AuthenticatedDiagnosisIdRoute
   '/diagnosis/': typeof AuthenticatedDiagnosisIndexRoute
 }
 export interface FileRoutesByTo {
@@ -59,6 +67,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/upload': typeof AuthenticatedUploadRoute
+  '/diagnosis/$id': typeof AuthenticatedDiagnosisIdRoute
   '/diagnosis': typeof AuthenticatedDiagnosisIndexRoute
 }
 export interface FileRoutesById {
@@ -68,13 +77,15 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/upload': typeof AuthenticatedUploadRoute
+  '/_authenticated/diagnosis/$id': typeof AuthenticatedDiagnosisIdRoute
   '/_authenticated/diagnosis/': typeof AuthenticatedDiagnosisIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/dashboard' | '/upload' | '/diagnosis/'
+  fullPaths:
+    '/' | '/auth' | '/dashboard' | '/upload' | '/diagnosis/$id' | '/diagnosis/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/dashboard' | '/upload' | '/diagnosis'
+  to: '/' | '/auth' | '/dashboard' | '/upload' | '/diagnosis/$id' | '/diagnosis'
   id:
     | '__root__'
     | '/'
@@ -82,6 +93,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/dashboard'
     | '/_authenticated/upload'
+    | '/_authenticated/diagnosis/$id'
     | '/_authenticated/diagnosis/'
   fileRoutesById: FileRoutesById
 }
@@ -135,18 +147,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDiagnosisIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/diagnosis/$id': {
+      id: '/_authenticated/diagnosis/$id'
+      path: '/diagnosis/$id'
+      fullPath: '/diagnosis/$id'
+      preLoaderRoute: typeof AuthenticatedDiagnosisIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedUploadRoute: typeof AuthenticatedUploadRoute
+  AuthenticatedDiagnosisIdRoute: typeof AuthenticatedDiagnosisIdRoute
   AuthenticatedDiagnosisIndexRoute: typeof AuthenticatedDiagnosisIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedUploadRoute: AuthenticatedUploadRoute,
+  AuthenticatedDiagnosisIdRoute: AuthenticatedDiagnosisIdRoute,
   AuthenticatedDiagnosisIndexRoute: AuthenticatedDiagnosisIndexRoute,
 }
 
