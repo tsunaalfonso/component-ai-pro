@@ -10,8 +10,8 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "deploy": "vite build && wrangler deploy",
-    "cf-preview": "vite build && wrangler dev"
+    "deploy": "npm run build && npx nitro deploy --prebuilt",
+    "cf-preview": "npm run build && npx nitro preview --prebuilt"
   },
   "overrides": {
     "rolldown": "1.2.1"
