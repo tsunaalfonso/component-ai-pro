@@ -98,6 +98,11 @@ function AdminPage() {
         </TabsList>
 
         <TabsContent value="users">
+          {users.error && (
+            <div className="panel mb-4 border-destructive/40 p-4 text-sm text-destructive">
+              {(users.error as Error).message}
+            </div>
+          )}
           {(() => {
             const pending = (users.data ?? []).filter((u) => !u.approved && !u.disabled);
             if (!pending.length) return null;
