@@ -12,10 +12,10 @@ export default defineConfig({
   nitro: {
     preset: "cloudflare-module",
     cloudflare: {
-      wrangler: {
-        name: "ic-smart-multi-tester",
-      },
-    },
+      // Worker name written into dist/server/wrangler.json
+      wrangler: { name: "ic-smart-multi-tester" },
+    } as { wrangler: { name: string } },
+
   },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
