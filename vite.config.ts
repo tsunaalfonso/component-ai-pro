@@ -11,7 +11,7 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 const nitro = {
   preset: "cloudflare-module",
   cloudflare: { wrangler: { name: "ic-smart-multi-tester" } },
-} as unknown as Parameters<typeof defineConfig>[0]["nitro"];
+} as never;
 
 export default defineConfig({
   nitro,
