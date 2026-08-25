@@ -10,7 +10,12 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 // Build output: dist/client (static assets) + dist/server (worker + wrangler.json).
 const nitro = {
   preset: "cloudflare-module",
-  cloudflare: { wrangler: { name: "component-ai-pro" } },
+  cloudflare: {
+    wrangler: {
+      name: "component-ai-pro",
+      compatibility_flags: ["nodejs_compat"],
+    },
+  },
 } as never;
 
 export default defineConfig({

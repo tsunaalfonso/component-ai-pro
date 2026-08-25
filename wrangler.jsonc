@@ -15,6 +15,9 @@
   "name": "component-ai-pro",
   "compatibility_date": "2026-08-20",
   "compatibility_flags": ["nodejs_compat"],
+  // Wrangler runs this before `deploy`/`dev`, so `npx wrangler deploy` alone
+  // (Cloudflare Workers Builds default) regenerates dist/ instead of failing.
+  "build": { "command": "npm run build" },
   "main": "dist/server/index.mjs",
   "no_bundle": true,
   "rules": [{ "type": "ESModule", "globs": ["**/*.mjs", "**/*.js"] }],
