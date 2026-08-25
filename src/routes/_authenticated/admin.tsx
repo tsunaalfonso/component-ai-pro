@@ -98,6 +98,44 @@ function AdminPage() {
         </TabsList>
 
         <TabsContent value="users">
+          {(() => {
+            const pending = (users.data ?? []).filter((u) => !u.approved && !u.disabled);
+            if (!pending.length) return null;
+            return (
+              <div className="panel mb-4 p-4">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                  Pending approval — {pending.length}
+                </p>
+                <div className="mt-3 space-y-2">
+                  {pending.map((u) => (
+                    <div key={u.id} className="flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-medium">{u.full_name || "—"}</p>
+                        <p className="font-mono text-[11px] text-muted-foreground">{u.email}</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          disabled={update.isPending}
+                          onClick={() => update.mutate({ userId: u.id, approved: true })}
+                        >
+                          Approve
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          disabled={update.isPending}
+                          onClick={() => update.mutate({ userId: u.id, disabled: true })}
+                        >
+                          Reject
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
           <div className="panel overflow-x-auto">
             <table className="w-full min-w-[860px] text-sm">
               <thead>
