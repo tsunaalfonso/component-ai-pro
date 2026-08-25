@@ -1,5 +1,5 @@
 import "./lib/error-capture";
-import "./lib/supabase-env.server";
+import { normalizeSupabaseServerEnv, missingSupabaseServerEnv } from "./lib/supabase-env.server";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
@@ -48,6 +48,17 @@ function isH3SwallowedErrorBody(body: string): boolean {
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      // Cloudflare passes vars/secrets as request-scoped bindings; mirror them
+      // into process.env before any Supabase client factory reads it.
+      normalizeSupabaseServerEnv(env);
+      const missing = missingSupabaseServerEnv();
+      if (missing.length > 0) {
+        console.error(
+          `Missing Supabase environment variable(s): ${missing.join(", ")}. ` +
+            "Set VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY (and optionally " +
+            "VITE_SUPABASE_PROJECT_ID) in your Cloudflare Worker environment.",
+        );
+      }
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);

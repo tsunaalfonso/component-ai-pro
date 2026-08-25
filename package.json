@@ -9,7 +9,9 @@
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "deploy": "vite build && wrangler deploy --config dist/server/wrangler.json",
+    "cf-preview": "vite build && wrangler dev --config dist/server/wrangler.json"
   },
   "overrides": {
     "rolldown": "1.2.1"

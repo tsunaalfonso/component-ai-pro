@@ -1,0 +1,89 @@
+# Deploying to Cloudflare
+
+## Recommended target: **Cloudflare Workers** (with Static Assets)
+
+This app is Vite + React + **TanStack Start with SSR**, so it needs a server runtime.
+Cloudflare Pages (static/Functions) is not the right fit — the build already emits a
+Workers module via the nitro `cloudflare-module` preset, which serves `dist/client`
+through the Workers Static Assets binding and runs SSR + server functions in the Worker.
+
+## Build output
+
+| What | Path |
+| --- | --- |
+| Build command | `npm run build` (`vite build`) |
+| Worker entry | `dist/server/index.mjs` |
+| Generated wrangler config | `dist/server/wrangler.json` |
+| Static assets | `dist/client` (bound as `ASSETS`) |
+
+## Environment variables
+
+Set these in the Cloudflare Worker (Settings → Variables & Secrets), for both
+Production and Preview.
+
+Public (safe in the browser bundle — plain **Variables**):
+
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_PUBLISHABLE_KEY`
+- `VITE_SUPABASE_PROJECT_ID`
+
+Server-only (**Secrets** — never `VITE_`-prefixed, never sent to the browser):
+
+- `SUPABASE_SERVICE_ROLE_KEY` (admin panel / privileged operations)
+- `LOVABLE_API_KEY` (AI diagnosis server function)
+
+Optional server aliases — only needed if you prefer the unprefixed names; the
+runtime derives them automatically from the `VITE_` values:
+
+- `SUPABASE_URL`
+- `SUPABASE_PUBLISHABLE_KEY`
+
+Note: `VITE_*` values are inlined at **build time**, so they must be present in the
+environment that runs the build (CI, or Cloudflare's build step). Secrets are read at
+request time from the Worker bindings.
+
+## How env reaches SSR / server functions
+
+Cloudflare passes variables and secrets as request-scoped bindings (the `env` argument
+of `fetch`), not as a populated global `process.env`. `src/server.ts` calls
+`normalizeSupabaseServerEnv(env)` on every request (see `src/lib/supabase-env.server.ts`),
+which mirrors bindings into `process.env` before any Supabase client is created, then
+backfills `SUPABASE_URL` / `SUPABASE_PUBLISHABLE_KEY` from the `VITE_` values.
+Missing required values produce an explicit error log naming them.
+
+## Deploy — option A: Wrangler CLI
+
+```bash
+npm install
+npm run build
+npx wrangler deploy --config dist/server/wrangler.json
+```
+
+Set secrets once:
+
+```bash
+npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY --config dist/server/wrangler.json
+npx wrangler secret put LOVABLE_API_KEY --config dist/server/wrangler.json
+```
+
+Local production-like run: `npx wrangler dev --config dist/server/wrangler.json`.
+
+## Deploy — option B: Cloudflare dashboard (Git integration)
+
+Workers & Pages → Create → Workers → Import a repository, then:
+
+- Build command: `npm run build`
+- Deploy command: `npx wrangler deploy --config dist/server/wrangler.json`
+- Root directory: `/`
+
+Add the variables and secrets listed above before the first deploy.
+
+## Compatibility notes
+
+- No Node-only APIs (`child_process`, `sharp`, `fs.watch`) in the server graph.
+- Supabase Auth, database queries, Storage and image uploads run through `fetch`, which
+  is native in Workers.
+- Live camera capture (WebRTC/`getUserMedia`) is browser-side and requires HTTPS —
+  satisfied by `*.workers.dev` and custom domains.
+- AI diagnosis and admin operations run in server functions inside the Worker and read
+  their secrets from bindings only.
