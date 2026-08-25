@@ -7,7 +7,8 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 // Cloudflare Workers deployment target (nitro `cloudflare-module` preset).
-// Build output: dist/client (static assets) + dist/server (worker + wrangler.json).
+// Nitro owns the generated `.output` deployment artifacts and deploys them with
+// `nitro deploy --prebuilt`; no hand-written Worker entry point is used.
 const nitro = {
   preset: "cloudflare-module",
   cloudflare: {
