@@ -14,6 +14,10 @@ const nitro = {
 } as never;
 
 export default defineConfig({
+  // Extra Vite plugins go here. The Lovable TanStack preset already supplies
+  // tanstackStart, viteReact, tailwindcss and tsConfigPaths in the correct
+  // order — do not re-add them, they would be duplicated.
+  plugins: [],
   nitro,
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
