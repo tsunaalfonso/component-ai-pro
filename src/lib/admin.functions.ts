@@ -2,27 +2,11 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-const ADMIN_EMAIL = "shernanjerk@gmail.com";
-
-async function assertAdmin(supabase: {
-  from: (t: string) => {
-    select: (c: string) => {
-      eq: (a: string, b: string) => { eq: (a: string, b: string) => { maybeSingle: () => Promise<{ data: unknown }> } };
-    };
-  };
-}, userId: string) {
-  const { data } = await supabase
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", userId)
-    .eq("role", "admin")
-    .maybeSingle();
-  if (!data) throw new Error("Administrator access required.");
-}
-
 /** Idempotently provisions the default administrator account. */
 export const ensureAdminAccount = createServerFn({ method: "POST" }).handler(async () => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { ADMIN_EMAIL } = await import("./admin.server");
+
 
   const { data: existing } = await supabaseAdmin
     .from("profiles")
